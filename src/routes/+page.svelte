@@ -23,8 +23,8 @@ const sendRat = async () => {
     user: "mpu",
     sentAt: new Date().getTime()
   })
-    disabled = true
   } catch (err) {
+    disabled = false
     console.log(err)
   }
 }
@@ -34,9 +34,5 @@ const sendRat = async () => {
 
 <main class="absolute inset-0 flex flex-col justify-center items-center gap-12 select-none">
   <img src="https://i.ibb.co/yPQ4fbG/xdd.png" alt="xdd" class="w-80" />
-  {#if disabled}
-  <button disabled class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold">You can rat in 12:12:12</button>
-  {:else}
-  <button on:click={() => {toastMessage("You sent a rat!"); sendRat()}} class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold">Send your rat</button>
-  {/if}
+  <button disabled={disabled} on:click={() => {disabled = true; toastMessage("You sent a rat!"); sendRat()}} class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold">{disabled ? "You can rat in XX:XX:XX" : "Send your rat"}</button>
 </main>
