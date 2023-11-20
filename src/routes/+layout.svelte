@@ -3,15 +3,17 @@ import { GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from
 import "../app.postcss";
 import { AppShell, LightSwitch, Toast, initializeStores } from '@skeletonlabs/skeleton';
 import { auth } from './../firebase/db';
-import { writable } from "svelte/store"
+import { Circle2 } from "svelte-loading-spinners"
 
+let user: any = '2314124+4141425+8467+120'
 
-	let user: any = writable('')
-
-	onAuthStateChanged(auth, (currentUser) => {
-		const userObject: any = currentUser || '';
-		user = userObject.displayName;
-	});
+onAuthStateChanged(auth, (currentUser) => {
+  if (currentUser) {
+    user = currentUser.displayName
+  } else {
+    user = ''
+  }
+});
 
 const githubSignIn = () => {
   signInWithPopup(auth, new GithubAuthProvider())
