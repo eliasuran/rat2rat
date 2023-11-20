@@ -37,6 +37,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"firebase": "^10.6.0"
+		"@floating-ui/dom": "^1.5.3",
+		"firebase": "^10.6.0",
+		"punycode": "^2.3.1"
 	}
 }

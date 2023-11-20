@@ -1,7 +1,7 @@
 <script lang="ts">
   import {getToastStore} from "@skeletonlabs/skeleton"
   import type {ToastSettings} from "@skeletonlabs/skeleton"
-  import { setDoc, doc, getDoc, onSnapshot } from "firebase/firestore"
+  import { setDoc, doc, getDoc, onSnapshot, collection } from "firebase/firestore"
   import {db, auth} from "./../firebase/db.js"
   import { onAuthStateChanged } from "firebase/auth";
   import { Circle } from "svelte-loading-spinners";
@@ -78,7 +78,9 @@ const sendRat = async () => {
           updateCountdown(); 
           intervalId = setInterval(updateCountdown, 1000);
         }
-      } 
+      } else {
+        loaded = true
+      }
     } catch (error) {
       console.log(error);
     }
@@ -94,22 +96,31 @@ const updateCountdown = () => {
   }
   };
 
+  const query = collection(db, "rats")
+  onSnapshot(query, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "modified") {
+        toastMessage(`${change.doc.id} just ratted`)
+      }
+    })
+  })
+
 </script>
 
-<main class="absolute inset-0 flex flex-col justify-center items-center gap-12">
+<main class="absolute inset-0 flex flex-col justify-center items-center gap-12 font-bold text-2xl">
   <img src="https://i.ibb.co/yPQ4fbG/xdd.png" alt="xdd" class="w-80" />
   {#if user}
   {#if loaded}
   <button 
     disabled={disabled} 
     on:click={() => {sendRat()}} 
-    class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold">{disabled ? `You can rat in ${Math.floor(canRatIn / 1000)} sec` : "Send your rat"}</button>
+    class="rounded-md border border-secondary-500 w-80 p-3">{disabled ? `You can rat in ${Math.floor(canRatIn / 1000)} sec` : "Send your rat"}</button>
   {:else}
   <button 
     disabled 
-    class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold flex items-center gap-20"><Circle color={"#3B81F6"} size={32} />Loading</button>
+    class="rounded-md border border-secondary-500 w-80 p-3 flex items-center gap-20"><Circle color={"#3B81F6"} size={32} />Loading</button>
   {/if}
   {:else}
-  <button disabled class="rounded-md border border-secondary-500 w-80 p-3 text-2xl font-bold">You must log in to rat</button>
+  <button disabled class="rounded-md border border-secondary-500 w-80 p-3">You must log in to rat</button>
   {/if}
 </main>
