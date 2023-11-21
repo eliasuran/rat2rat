@@ -78,7 +78,7 @@ const sendRat = async () => {
       if (docSnap.exists()) {
         ratsSent = docSnap.data().ratsSent
         const sentAt = docSnap.data().sentAt;
-        const oneMinuteAgo = new Date().getTime() - 0.1 * 60 * 1000;
+        const oneMinuteAgo = new Date().getTime() - 1 * 60 * 1000;
         canRatIn = sentAt - oneMinuteAgo
         loaded = true
 
