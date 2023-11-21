@@ -114,7 +114,7 @@ const updateCountdown = () => {
   {#if loaded}
     <button 
       disabled={disabled} 
-      on:click={() => {pending = true, sendRat()}} 
+      on:click={() => {pending = true, disabled = true, sendRat()}} 
       class="rounded-md border border-secondary-500 w-80 p-3">
         {#if disabled}
           {#if pending}
