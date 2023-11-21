@@ -2,7 +2,7 @@
   import {getToastStore} from "@skeletonlabs/skeleton"
   import type {ToastSettings} from "@skeletonlabs/skeleton"
   import { setDoc, doc, getDoc, onSnapshot, collection } from "firebase/firestore"
-  import {db, auth} from "./../firebase/db.js"
+  import {db, auth} from "./../lib/db"
   import { onAuthStateChanged } from "firebase/auth";
   import { Circle } from "svelte-loading-spinners";
 
@@ -39,7 +39,6 @@ const sendRat = async () => {
       await setDoc(doc(db, "rats", user), {
         sentAt: new Date().getTime()
       })
-      toastMessage("You sent a rat!");
       if (intervalId) {
         clearInterval(intervalId)
       }
@@ -48,12 +47,13 @@ const sendRat = async () => {
     } catch (err) {
       disabled = false
       console.log(err)
-  }
-
+    }
   }
 }
 
   let loaded = false
+
+  let pending = false
 
   let intervalId: any;
 
@@ -77,6 +77,7 @@ const sendRat = async () => {
           disabled = true
           updateCountdown(); 
           intervalId = setInterval(updateCountdown, 1000);
+          pending = false
         }
       } else {
         loaded = true
@@ -111,10 +112,20 @@ const updateCountdown = () => {
   <img src="https://i.ibb.co/yPQ4fbG/xdd.png" alt="xdd" class="w-80" />
   {#if user}
   {#if loaded}
-  <button 
-    disabled={disabled} 
-    on:click={() => {sendRat()}} 
-    class="rounded-md border border-secondary-500 w-80 p-3">{disabled ? `You can rat in ${Math.floor(canRatIn / 1000)} sec` : "Send your rat"}</button>
+    <button 
+      disabled={disabled} 
+      on:click={() => {pending = true, sendRat()}} 
+      class="rounded-md border border-secondary-500 w-80 p-3">
+        {#if disabled}
+          {#if pending}
+            <div class="flex gap-20"><Circle color={"#3B81F6"} size={32} />Pending</div>
+          {:else}
+            {`You can rat in ${Math.floor(canRatIn / 1000)} sec`}
+          {/if}
+        {:else}
+          Send your rat
+        {/if}
+    </button>  
   {:else}
   <button 
     disabled 

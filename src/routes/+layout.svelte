@@ -2,7 +2,7 @@
 import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import "../app.postcss";
 import { AppShell, LightSwitch, Toast, initializeStores, popup, storePopup } from '@skeletonlabs/skeleton';
-import { auth } from './../firebase/db';
+import { auth } from './../lib/db';
 import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 import type { PopupSettings } from "@skeletonlabs/skeleton"
 
