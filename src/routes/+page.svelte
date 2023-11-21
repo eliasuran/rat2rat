@@ -11,11 +11,15 @@
 onAuthStateChanged(auth, (currentUser) => {
   if (currentUser) {
     user = currentUser.displayName
+    if (!currentUser.displayName) {
+      user = currentUser.email
+    }
     checkIfRatHasBeenSentWithinLastTenMinutes()
   } else {
     user = ''
   }
 });
+
 
   const toastStore = getToastStore()
 
