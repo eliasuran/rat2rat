@@ -7,12 +7,15 @@
   import { Circle } from "svelte-loading-spinners";
 
   let user: any = '2314124+4141425+8467+120'
+  let displayName: string | null = ''
 
 onAuthStateChanged(auth, (currentUser) => {
   if (currentUser) {
-    user = currentUser.displayName
-    if (!currentUser.displayName) {
-      user = currentUser.email
+    user = currentUser
+    if (currentUser.displayName) {
+      displayName = currentUser.displayName
+    } else {
+      displayName = currentUser.email
     }
     checkIfRatHasBeenSentWithinLastTenMinutes()
   } else {
@@ -30,7 +33,9 @@ const toastMessage = (message: string) => {
     background: "border border-secondary-500"
     }
     toastStore.trigger(toast)
-  }
+}
+
+let ratsSent: number
 
 let disabled = false
 
@@ -40,8 +45,10 @@ const sendRat = async () => {
   }
   else {
     try {
-      await setDoc(doc(db, "rats", user), {
-        sentAt: new Date().getTime()
+      await setDoc(doc(db, "rats", user.uid), {
+        sentAt: new Date().getTime(),
+        displayName: displayName,
+        ratsSent: ratsSent += 1
       })
       if (intervalId) {
         clearInterval(intervalId)
@@ -65,12 +72,13 @@ const sendRat = async () => {
   let canRatIn: any
   const checkIfRatHasBeenSentWithinLastTenMinutes = async () => {
     try {
-      const docRef = doc(db, "rats", user);
+      const docRef = doc(db, "rats", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
+        ratsSent = docSnap.data().ratsSent
         const sentAt = docSnap.data().sentAt;
-        const oneMinuteAgo = new Date().getTime() - 1 * 60 * 1000;
+        const oneMinuteAgo = new Date().getTime() - 0.1 * 60 * 1000;
         canRatIn = sentAt - oneMinuteAgo
         loaded = true
 
@@ -85,6 +93,7 @@ const sendRat = async () => {
         }
       } else {
         loaded = true
+        ratsSent = 0
       }
     } catch (error) {
       console.log(error);
@@ -105,10 +114,12 @@ const updateCountdown = () => {
   onSnapshot(query, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "modified") {
-        toastMessage(`${change.doc.id} just ratted`)
+        toastMessage(`${change.doc.data().displayName} just ratted`)
       }
     })
   })
+
+
 
 </script>
 
