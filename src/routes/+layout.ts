@@ -7,7 +7,9 @@ export const load: LayoutLoad = () => {
 	const query = collection(db, 'rats');
 	onSnapshot(query, (snapshot) => {
 		snapshot.docChanges().forEach((doc) => {
-			ranking.push(doc.doc.data());
+			if (doc.type === 'added') {
+				ranking.push(doc.doc.data());
+			}
 		});
 	});
 
