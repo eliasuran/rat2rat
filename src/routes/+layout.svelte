@@ -35,7 +35,7 @@ const drawerStore = getDrawerStore()
 
 const drawerSettings: DrawerSettings = {
   bgDrawer: "bg-gradient-to-tr dark:from-surface-900 from-surface-200 dark:to-secondary-900 to-secondary-300",
-  width: 'w-2/3'
+  width: 'sm:w-2/3 w-3/4'
 }
 
 const githubSignIn = () => {
@@ -59,7 +59,7 @@ const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
 
 <Toast />
 <Drawer class="z-50">
-  <div class="w-full h-full p-14">
+  <div class="w-full h-full sm:p-12 p-10">
   <h1 class="text-4xl my-4">Leaderboard</h1>
   <div class="flex flex-col gap-4 w-full">
   {#each ranking as rank, index}
