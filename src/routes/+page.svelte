@@ -12,7 +12,6 @@
 onAuthStateChanged(auth, (currentUser) => {
   if (currentUser) {
     user = currentUser
-    console.log(user)
     if (currentUser.displayName) {
       displayName = currentUser.displayName
     } else {
