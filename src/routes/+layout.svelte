@@ -8,6 +8,8 @@ import type { DrawerSettings, PopupSettings } from "@skeletonlabs/skeleton"
 import type { PageData } from "./$types";
 export let data: PageData
 
+const ranking: any[] = data.data 
+
 initializeStores()
 
 let user: any = '2314124+4141425+8467+120'
@@ -49,8 +51,6 @@ const logOut = async () => {
 }
 
 const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
-
-const ranking: any[] = data.data.sort((a: any, b: any) => a.ratsSent - b.ratsSent)
 </script>
 
 <svelte:head>
@@ -61,8 +61,12 @@ const ranking: any[] = data.data.sort((a: any, b: any) => a.ratsSent - b.ratsSen
 <Drawer class="z-50">
   <div class="w-full h-full p-14">
   <h1 class="text-4xl my-4">Leaderboard</h1>
-  <div class="flex flex-col gap-4">
-  {#each ranking as rank}<div class="rounded-md border border-secondary-500 p-2 flex">{rank.displayName}{rank.ratsSent}</div>{/each}
+  <div class="flex flex-col gap-4 w-full">
+  {#each ranking as rank, index}
+  <div class="flex items-center gap-4 font-bold text-xl">{index + 1}
+  <div class="rounded-md border border-secondary-500 p-2 flex gap-1 w-full">{rank.displayName} - <span class="text-primary-500">{rank.ratsSent}</span></div>
+  </div>
+  {/each}
   </div>
   </div>
 </Drawer>

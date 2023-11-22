@@ -11,6 +11,7 @@ export const load: LayoutLoad = () => {
 				ranking.push(doc.doc.data());
 			}
 		});
+		ranking = ranking.sort((a: any, b: any) => b.ratsSent - a.ratsSent);
 	});
 
 	return { data: ranking };
