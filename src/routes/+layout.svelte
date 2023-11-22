@@ -8,7 +8,8 @@ import type { DrawerSettings, PopupSettings } from "@skeletonlabs/skeleton"
 import type { PageData } from "./$types";
 export let data: PageData
 
-const ranking: any[] = data.data 
+const ranking: any[] = data.data[0]
+const recent: object = data.data[1]
 
 initializeStores()
 
@@ -33,7 +34,14 @@ const popupClick: PopupSettings = {
 
 const drawerStore = getDrawerStore()
 
-const drawerSettings: DrawerSettings = {
+const leaderboardDrawer: DrawerSettings = {
+  id: "leaderboard",
+  bgDrawer: "bg-gradient-to-tr dark:from-surface-900 from-surface-200 dark:to-secondary-900 to-secondary-300",
+  width: 'sm:w-2/3 w-3/4'
+}
+
+const recentDrawer: DrawerSettings = {
+  id: "recent",
   bgDrawer: "bg-gradient-to-tr dark:from-surface-900 from-surface-200 dark:to-secondary-900 to-secondary-300",
   width: 'sm:w-2/3 w-3/4'
 }
@@ -59,6 +67,7 @@ const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
 
 <Toast />
 <Drawer class="z-50">
+  {#if $drawerStore.id === "leaderboard"}
   <div class="w-full h-full sm:p-12 p-10">
   <h1 class="text-4xl my-4">Leaderboard</h1>
   <div class="flex flex-col gap-4 w-full">
@@ -69,6 +78,16 @@ const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
   {/each}
   </div>
   </div>
+  {:else if $drawerStore.id === "recent"}
+  <div class="w-full h-full sm:p-12 p-10">
+    <h1 class="text-4xl my-4">Recent rats</h1>
+  <div class="flex flex-col justify-end items-start gap-4 h-5/6">
+  {#each recent as user}
+  <div class="flex flex-col"><span class="text-secondary-500 my-2">{Math.floor((new Date().getTime() - user.sentAt)/60000)} min ago</span><div class="border border-secondary-500 rounded-md p-4">{user.displayName} ratted!</div></div>
+  {/each}
+  </div>
+  </div>
+  {/if}
 </Drawer>
 
 <AppShell> 
@@ -76,7 +95,8 @@ const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
     <LightSwitch />
   {#if user}
   <div class="flex gap-4">
-    <button class={`${styling} w-auto`} on:click={() => drawerStore.open(drawerSettings)}>Leaderboard</button>
+    <button class={`${styling} w-auto`} on:click={() => drawerStore.open(recentDrawer)}>Recent</button>
+    <button class={`${styling} w-auto`} on:click={() => drawerStore.open(leaderboardDrawer)}>Leaderboard</button>
     <button class={styling} on:click={()=> {logOut()}}>Log Out</button>
   </div>
   {:else}
