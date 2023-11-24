@@ -9,7 +9,7 @@ import type { PageData } from "./$types";
 export let data: PageData
 
 const ranking: any[] = data.data[0]
-const recent: object = data.data[1]
+let recent: any[] = data.data[1]
 
 initializeStores()
 
@@ -81,7 +81,7 @@ const styling = "rounded-md border border-secondary-500 w-20 p-2 font-bold"
   {:else if $drawerStore.id === "recent"}
   <div class="w-full h-full sm:p-12 p-10">
     <h1 class="text-4xl my-4">Recent rats</h1>
-  <div class="flex flex-col justify-end items-start gap-4 h-5/6">
+  <div class="relative flex flex-col justify-end items-start gap-4 h-5/6 overflow-hidden">
   {#each recent as user}
   <div class="flex flex-col"><span class="text-secondary-500 my-2">{Math.floor((new Date().getTime() - user.sentAt)/60000)} min ago</span><div class="border border-secondary-500 rounded-md p-4">{user.displayName} ratted!</div></div>
   {/each}
